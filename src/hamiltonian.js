@@ -4,7 +4,7 @@ const Hamiltonian = (findDestroyerStepLimit=100, findConnectorStepLimit=100, fin
 
   hm.getAction = (node, state=null) => {
     if (hm.isHamiltonianCycle) {
-      return hm.policy[node.x][node.y] 
+      return hm.policy[node.x][node.y]
     } else return hm.spAgent.getAction(node)
   }
 
@@ -113,7 +113,7 @@ fnHamiltonian = {
       if(prevDir==null) break // A dead end has been hit
       current = current.getNeighbor(prevDir)
     }
-    
+
     if (current==start) path.push(current)
 
     return path
@@ -154,19 +154,19 @@ fnHamiltonian = {
 
     // Invert the value of an edge between 0 and 1 (also affects its neighbor)
     // Has no effect on values less than 0
-    vx.invertEdge = dir => { 
+    vx.invertEdge = dir => {
       if (vx.getEdge(dir)>=0) {
-        vx.setEdge(dir, vx.getEdge(dir)>0 ? 0 : 1) 
-        vx.getNeighbor(dir).setEdge(game.DIR_OPPOSITES.get(dir), vx.getEdge(dir)) 
+        vx.setEdge(dir, vx.getEdge(dir)>0 ? 0 : 1)
+        vx.getNeighbor(dir).setEdge(game.DIR_OPPOSITES.get(dir), vx.getEdge(dir))
       }
     }
 
     // Delete this edge by setting its value to -1 (also affects its neighbor)
-    vx.deleteEdge = dir => { 
+    vx.deleteEdge = dir => {
       if (vx.getEdge(dir)>=-1) {
-        vx.setEdge(dir, -1) 
+        vx.setEdge(dir, -1)
         const neighbor = vx.getNeighbor(dir)
-        if (neighbor != null) neighbor.setEdge(game.DIR_OPPOSITES.get(dir), vx.getEdge(dir)) 
+        if (neighbor != null) neighbor.setEdge(game.DIR_OPPOSITES.get(dir), vx.getEdge(dir))
       }
     }
 
@@ -184,13 +184,13 @@ fnHamiltonian = {
         }
       }
       return null
-    }    
+    }
 
     return vx
   },
 
   /**
-   * Returns a graph of width nx and height ny where all vertexes are connected to their 
+   * Returns a graph of width nx and height ny where all vertexes are connected to their
    * North, South, East and West neighbors (except at the 4 sides of the graph)
    */
   mkGraph: (nx, ny) => {
@@ -251,7 +251,7 @@ fnHamiltonian = {
    */
   PathNode: (vertex, parent) => {
     const dn = {}
-    
+
     dn.vertex = vertex
     dn.parent = parent
     dn.dirToParent = parent == null ? null : parent.vertex.sub(dn.vertex)
@@ -316,7 +316,7 @@ fnHamiltonian = {
   findConnector: (graph, start, goals, stepLimit=100) => {
     //
     const pathCriteria = (current, dir) => {
-      return current.length<3 || 
+      return current.length<3 ||
         (current.isAltEdge && current.vertex.getEdge(current.dirToParent)!=current.vertex.getEdge(dir))
     }
     const goalCriteria = current => current.isEvenAltEdge
@@ -344,7 +344,7 @@ fnHamiltonian = {
   findDestroyer: (graph, start, goals, stepLimit=0) => {
     const pathCriteria = (current, dir) => {
       // If below minimum length, check if it is alternating in the right way
-      return (current.length==1 && current.vertex.getEdge(dir)==1) ||  
+      return (current.length==1 && current.vertex.getEdge(dir)==1) ||
       (current.length==2 && current.vertex.getEdge(current.dirToParent)==1 && current.vertex.getEdge(dir)==0) ||
       (current.length==3 && current.vertex.getEdge(current.dirToParent)==0 && current.vertex.getEdge(dir)==1) ||
       // If isDestroyer and the next edge has been deleted
@@ -396,9 +396,9 @@ fnHamiltonian = {
     for (let i=0; i<graph.length; i++) {
       for (let j=0; j<graph[i].length; j++) {
         // No edges means it is deliberately excluded from the path
-        if(graph[i][j].nEdges==0) exclusions.addNode(graph[i][j]) 
+        if(graph[i][j].nEdges==0) exclusions.addNode(graph[i][j])
         // Must only have 2 edges
-        else if (graph[i][j].nEdges!=2) return false 
+        else if (graph[i][j].nEdges!=2) return false
         else if (start==null) start = graph[i][j]
       }
     }
